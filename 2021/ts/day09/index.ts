@@ -7,8 +7,8 @@ async function getInput(): Promise<number[][]> {
 }
 
 interface Pos {
-  row: number;
-  col: number;
+  y: number;
+  x: number;
 }
 
 interface Point extends Pos {
@@ -16,46 +16,46 @@ interface Point extends Pos {
 }
 
 class HeightMap {
-  constructor(private grid: number[][]) {}
+  private extent: Pos;
 
-  findNeighbors({ row, col }: Pos): Point[] {
-    return [
-      { row, col: col - 1 },
-      { row, col: col + 1 },
-      { row: row - 1, col },
-      { row: row + 1, col }
-    ]
-      .filter(
-        (pos) =>
-          pos.col >= 0 &&
-          pos.row >= 0 &&
-          pos.col < this.extent.cols &&
-          pos.row < this.extent.rows
-      )
-      .map((pos) => ({ ...pos, val: this.grid[pos.row][pos.col] }));
-  }
-
-  get extent(): { rows: number; cols: number } {
-    return {
-      rows: this.grid.length,
-      cols: this.grid[0].length
+  constructor(private grid: number[][]) {
+    this.extent = {
+      y: this.grid.length,
+      x: this.grid[0].length
     };
   }
 
+  findNeighbors({ y, x }: Pos): Point[] {
+    return [
+      { y, x: x - 1 },
+      { y, x: x + 1 },
+      { y: y - 1, x },
+      { y: y + 1, x }
+    ]
+      .filter(
+        (pos) =>
+          pos.x >= 0 &&
+          pos.y >= 0 &&
+          pos.x < this.extent.x &&
+          pos.y < this.extent.y
+      )
+      .map((pos) => ({ ...pos, val: this.grid[pos.y][pos.x] }));
+  }
+
   findLocalMinima(): Point[] {
-    const minima = [];
-    for (let row = 0; row < this.extent.rows; row++) {
-      for (let col = 0; col < this.extent.cols; col++) {
-        const val = this.grid[row][col];
+    const minima: Point[] = [];
+    this.grid.forEach((row, y) => {
+      row.forEach((val, x) => {
         if (
-          this.findNeighbors({ row, col }).every(
+          this.findNeighbors({ y, x }).every(
             ({ val: neighborVal }) => neighborVal > val
           )
         ) {
-          minima.push({ row, col, val });
+          minima.push({ y, x, val });
         }
-      }
-    }
+      });
+    });
+
     return minima;
   }
 
@@ -74,9 +74,9 @@ class HeightMap {
     return this.findLocalMinima().map((minimum) => {
       const visited: Record<number, Record<number, boolean>> = {};
 
-      return this.getBasinNeighbors(minimum).filter(({ row, col }) => {
-        const keep = !visited[row]?.[col];
-        visited[row] = { ...visited[row], [col]: true };
+      return this.getBasinNeighbors(minimum).filter(({ y, x }) => {
+        const keep = !visited[y]?.[x];
+        visited[y] = { ...visited[y], [x]: true };
         return keep;
       });
     });
