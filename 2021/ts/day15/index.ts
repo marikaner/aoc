@@ -1,16 +1,17 @@
 import { readInput } from '../read-input';
 
 async function getInput(): Promise<Point[][]> {
-  return (await readInput(__dirname))
-    .split('\n')
-    .map((line) =>
-      line
-        .split('')
-        .map((risk) => ({ risk: parseInt(risk), totalRisk: Number.MAX_VALUE }))
-    );
+  return (await readInput(__dirname)).split('\n').map((line, y) =>
+    line.split('').map((risk, x) => ({
+      risk: parseInt(risk),
+      totalRisk: Number.MAX_VALUE,
+      x,
+      y
+    }))
+  );
 }
 
-interface Point {
+interface Point extends Pos {
   risk: number;
   totalRisk: number;
   visited?: boolean;
@@ -40,17 +41,21 @@ class Cavern {
           const newXs: Point[] = [];
           for (let xRepeat = 0; xRepeat < repeats; xRepeat++) {
             newXs.push(
-              ...xs.map((point) => repeatPoint(point, xRepeat + yRepeat))
+              ...xs.map((point) =>
+                repeatPoint(point, xRepeat, yRepeat, {
+                  y: points.length,
+                  x: points[0].length
+                })
+              )
             );
           }
           return newXs;
         })
       );
     }
-    console.log(this.points.length);
   }
 
-  getUnvisitedNeighbors({ x, y }: Pos): Point[] {
+  getNeighbors({ x, y }: Pos): Point[] {
     return [
       { y, x: x - 1 },
       { y, x: x + 1 },
@@ -62,8 +67,7 @@ class Cavern {
           pos.x >= 0 &&
           pos.y >= 0 &&
           pos.x < this.extent.x &&
-          pos.y < this.extent.y &&
-          !this.points[y][x].visited
+          pos.y < this.extent.y
       )
       .map((pos) => this.points[pos.y][pos.x]);
   }
@@ -72,27 +76,38 @@ class Cavern {
     const start = { x: 0, y: 0 };
     const end = { x: this.extent.x - 1, y: this.extent.y - 1 };
     this.points[start.y][start.x].totalRisk = 0;
-    this.points.forEach((xs, y) => {
-      xs.forEach((point, x) => {
-        this.getUnvisitedNeighbors({ x, y }).forEach((neighbor) => {
-          neighbor.totalRisk = Math.min(
-            neighbor.totalRisk,
-            neighbor.risk + point.totalRisk
-          );
-        });
-        point.visited = true;
+    const queue = [this.points[start.y][start.x]];
+    while (queue.length) {
+      const point = queue.shift()!;
+
+      this.getNeighbors(point).forEach((neighbor) => {
+        const risk = neighbor.risk + point.totalRisk;
+        if (risk < neighbor.totalRisk) {
+          neighbor.totalRisk = risk;
+          queue.push(neighbor);
+        }
       });
-    });
+    }
     return this.points[end.y][end.x].totalRisk;
   }
 }
 
-function repeatPoint(point: Point, riskIncrease: number): Point {
-  let risk = point.risk + riskIncrease;
+function repeatPoint(
+  point: Point,
+  xRepeat: number,
+  yRepeat: number,
+  originalExtent: Pos
+): Point {
+  let risk = point.risk + xRepeat + yRepeat;
   if (risk > 9) {
     risk %= 9;
   }
-  return { ...point, risk };
+  return {
+    ...point,
+    risk,
+    x: point.x + xRepeat * originalExtent.x,
+    y: point.y + yRepeat * originalExtent.y
+  };
 }
 
 async function main() {
