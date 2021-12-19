@@ -23,11 +23,31 @@ interface Pos {
 
 class Cavern {
   private extent: Pos;
-  constructor(private points: Point[][]) {
+  private points: Point[][] = [];
+
+  constructor(points: Point[][], repeats = 1) {
     this.extent = {
-      y: this.points.length,
-      x: this.points[0].length
+      y: points.length * repeats,
+      x: points[0].length * repeats
     };
+    this.initPoints(points, repeats);
+  }
+
+  private initPoints(points: Point[][], repeats: number) {
+    for (let yRepeat = 0; yRepeat < repeats; yRepeat++) {
+      this.points.push(
+        ...points.map((xs) => {
+          const newXs: Point[] = [];
+          for (let xRepeat = 0; xRepeat < repeats; xRepeat++) {
+            newXs.push(
+              ...xs.map((point) => repeatPoint(point, xRepeat + yRepeat))
+            );
+          }
+          return newXs;
+        })
+      );
+    }
+    console.log(this.points.length);
   }
 
   getUnvisitedNeighbors({ x, y }: Pos): Point[] {
@@ -52,14 +72,13 @@ class Cavern {
     const start = { x: 0, y: 0 };
     const end = { x: this.extent.x - 1, y: this.extent.y - 1 };
     this.points[start.y][start.x].totalRisk = 0;
-    this.points.forEach((ys, y) => {
-      ys.forEach((point, x) => {
-        const neighbors = this.getUnvisitedNeighbors({ x, y });
-        neighbors.forEach((neighbor) => {
-          const riskThroughCurrent = neighbor.risk + point.totalRisk;
-          if (neighbor.totalRisk > riskThroughCurrent) {
-            neighbor.totalRisk = riskThroughCurrent;
-          }
+    this.points.forEach((xs, y) => {
+      xs.forEach((point, x) => {
+        this.getUnvisitedNeighbors({ x, y }).forEach((neighbor) => {
+          neighbor.totalRisk = Math.min(
+            neighbor.totalRisk,
+            neighbor.risk + point.totalRisk
+          );
         });
         point.visited = true;
       });
@@ -68,11 +87,21 @@ class Cavern {
   }
 }
 
+function repeatPoint(point: Point, riskIncrease: number): Point {
+  let risk = point.risk + riskIncrease;
+  if (risk > 9) {
+    risk %= 9;
+  }
+  return { ...point, risk };
+}
+
 async function main() {
   const positions = await getInput();
-  const cave = new Cavern(positions);
+  // const cavern = new Cavern(positions);
+  // console.log(cavern.findPathWithLowestRisk());
 
-  console.log(cave.findPathWithLowestRisk());
+  const bigCavern = new Cavern(positions, 5);
+  console.log(bigCavern.findPathWithLowestRisk());
 }
 
 main();
