@@ -112,9 +112,11 @@ function repeatPoint(
 
 async function main() {
   const positions = await getInput();
+  /* Task 1 */
   // const cavern = new Cavern(positions);
   // console.log(cavern.findPathWithLowestRisk());
 
+  /* Task 2 */
   const bigCavern = new Cavern(positions, 5);
   console.log(bigCavern.findPathWithLowestRisk());
 }
