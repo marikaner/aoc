@@ -47,26 +47,42 @@ class Polymer {
     );
   }
 
-  getPairOccurrences(iterations: number): Record<string, number> {
+  calculateOccurrences(iterations: number): Record<string, number> {
     let pairOccurrences = this.getInitialPairOccurrences();
     while (iterations) {
       pairOccurrences = this.insert(pairOccurrences);
       iterations--;
     }
-    return pairOccurrences;
+    return Object.entries(pairOccurrences).reduce(
+      (occurrences, [pair, pairOccurrences]) =>
+        addToObject(occurrences, pair[1], pairOccurrences),
+      { [this.template[0]]: 1 }
+    );
+  }
+
+  private insertInFormula(formula: string[]): string[] {
+    return formula.flatMap((element, i) => {
+      return i < formula.length - 1
+        ? [element, this.rules[element + formula[i + 1]]]
+        : [element];
+    });
+  }
+
+  simulateOccurrences(iterations: number): Record<string, number> {
+    let formula = [...this.template];
+    while (iterations) {
+      formula = this.insertInFormula(formula);
+      iterations--;
+    }
+    return formula.reduce(
+      (occurrences, element) => addToObject(occurrences, element),
+      {} as Record<string, number>
+    );
   }
 }
 
-function getScore(
-  pairOccurrences: Record<string, number>,
-  template: string[]
-): number {
-  const elementOccurrences = Object.entries(pairOccurrences).reduce(
-    (occurrences, [pair, pairOccurrences]) =>
-      addToObject(occurrences, pair[1], pairOccurrences),
-    { [template[0]]: 1 }
-  );
-  const sortedScores = Object.values(elementOccurrences).sort((a, b) => a - b);
+function getScore(occurrences: Record<string, number>): number {
+  const sortedScores = Object.values(occurrences).sort((a, b) => a - b);
   return sortedScores[sortedScores.length - 1] - sortedScores[0];
 }
 
@@ -86,9 +102,15 @@ async function main() {
   const { template, rules } = await getInput();
   const polymer = new Polymer(template, rules);
 
-  const occurrences = polymer.getPairOccurrences(40);
+  /* Task 1 */
+  // const occurrences = polymer.simulateOccurrences(10);
+  // console.log(occurrences);
+  // console.log(getScore(occurrences));
+
+  /* Task 2 */
+  const occurrences = polymer.calculateOccurrences(40);
   console.log(occurrences);
-  console.log(getScore(occurrences, template));
+  console.log(getScore(occurrences));
 }
 
 main();
