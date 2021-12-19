@@ -103,14 +103,10 @@ async function main() {
   const polymer = new Polymer(template, rules);
 
   /* Task 1 */
-  // const occurrences = polymer.simulateOccurrences(10);
-  // console.log(occurrences);
-  // console.log(getScore(occurrences));
+  // console.log(getScore(polymer.simulateOccurrences(10)));
 
   /* Task 2 */
-  const occurrences = polymer.calculateOccurrences(40);
-  console.log(occurrences);
-  console.log(getScore(occurrences));
+  console.log(getScore(polymer.calculateOccurrences(40)));
 }
 
 main();
