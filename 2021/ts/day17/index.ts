@@ -21,10 +21,6 @@ interface TargetArea {
   y2: number;
 }
 
-function sign(num: number): number {
-  return num < 0 ? -1 : num > 0 ? 1 : 0;
-}
-
 class Probe {
   maxY = 0;
   possibilities = 0;
