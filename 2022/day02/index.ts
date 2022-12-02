@@ -12,10 +12,8 @@ const shapes = {
   Z: 3
 };
 
-const outcomes = {
+const outcomeScores = {
   0: 3,
-  '-1': 6,
-  '-2': 0,
   1: 0,
   2: 6
 };
@@ -28,7 +26,9 @@ const outcomeOffset = {
 
 function calcScore(strategy) {
   return strategy
-    .map(([move, response]) => response + outcomes[move - response])
+    .map(
+      ([move, response]) => response + outcomeScores[(move - response + 3) % 3]
+    )
     .reduce((sum, score) => sum + score, 0);
 }
 
@@ -45,5 +45,5 @@ function task2() {
   return calcScore(strategy);
 }
 
-// console.log(task1());
+console.log(task1());
 // console.log(task2());
