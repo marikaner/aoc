@@ -1,24 +1,29 @@
-import { cursorTo } from 'node:readline';
 import { readInput, getDirName } from '../read-input.js';
 
-const input = (await readInput(getDirName(import.meta.url))).split('\n\n');
-// .map((line) => line ? parseInt(line) : 0);
+const input = await readInput(getDirName(import.meta.url));
 
-const caloriesByElf = input.map((chunk) =>
-  chunk.split('\n').map((line) => parseInt(line))
+const caloriesByElf = input.split('\n\n').map((chunk) =>
+  chunk
+    .split('\n')
+    .map((line) => parseInt(line))
+    .reduce((sum, calories) => sum + calories, 0)
 );
 
-const m = caloriesByElf.reduce(
-  (maxes, currCalories) => {
-    const min = Math.min(...maxes);
-    const newMax = Math.max(
-      min,
-      currCalories.reduce((sum, curr) => sum + curr, 0)
-    );
-    maxes[maxes.indexOf(min)] = newMax;
-    return maxes;
-  },
-  [0, 0, 0]
-);
+function task1() {
+  return caloriesByElf.reduce((max, calories) => Math.max(max, calories), 0);
+}
 
-console.log(m[0] + m[1] + m[2]);
+function task2() {
+  return caloriesByElf
+    .reduce(
+      (maxes, calories) => {
+        maxes[0] = Math.max(maxes[0], calories);
+        return maxes.sort();
+      },
+      [0, 0, 0]
+    )
+    .reduce((sum, calories) => sum + calories, 0);
+}
+
+// console.log(task1());
+// console.log(task2());
