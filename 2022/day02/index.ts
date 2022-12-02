@@ -13,15 +13,15 @@ const shapes = {
 };
 
 const outcomeScores = {
-  0: 3,
-  1: 0,
-  2: 6
+  0: 3, // draw
+  1: 0, // loss => 1, -2
+  2: 6 // win => 2, -1
 };
 
 const outcomeOffset = {
-  X: 2,
-  Y: 0,
-  Z: 1
+  X: 2, // loss
+  Y: 0, // draw
+  Z: 1 // win
 };
 
 function calcScore(strategy) {
