@@ -45,5 +45,5 @@ function task2() {
   return calcScore(strategy);
 }
 
-console.log(task1());
+// console.log(task1());
 // console.log(task2());
