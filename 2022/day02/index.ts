@@ -26,9 +26,7 @@ const outcomeOffset = {
 
 function calcScore(strategy) {
   return strategy
-    .map(
-      ([move, response]) => response + outcomeScores[(move - response + 3) % 3]
-    )
+    .map(([opp, player]) => player + outcomeScores[(opp - player + 3) % 3])
     .reduce((sum, score) => sum + score, 0);
 }
 
@@ -38,9 +36,9 @@ function task1() {
 }
 
 function task2() {
-  const strategy = rounds.map(([move, outcome]) => [
-    shapes[move],
-    (outcomeOffset[outcome] + shapes[move]) % 3 || 3
+  const strategy = rounds.map(([opp, outcome]) => [
+    shapes[opp],
+    (outcomeOffset[outcome] + shapes[opp]) % 3 || 3
   ]);
   return calcScore(strategy);
 }
