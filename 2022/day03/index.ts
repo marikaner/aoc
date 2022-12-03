@@ -1,6 +1,6 @@
-import { readInput, getDirName } from '../read-input.js';
+import { readInput } from '../read-input.js';
 
-const input = await readInput(getDirName(import.meta.url));
+const input = await readInput(import.meta.url);
 
 const rucksacks = input.split('\n');
 

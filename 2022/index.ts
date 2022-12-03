@@ -1,8 +1,8 @@
-import { readInput, getDirName } from './read-input.js';
+import { readInput } from './read-input.js';
 
-const input = (await readInput(getDirName(import.meta.url))).split('\n');
+const input = await readInput(import.meta.url);
 
-const something = input.map((line) => parseInt(line));
+const something = input.split('\n').map((line) => parseInt(line));
 
 function task1() {}
 
