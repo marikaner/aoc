@@ -8,32 +8,22 @@ const motions: [string, number][] = input.split('\n').map((line) => {
 });
 
 function getMotion(prevKnot, knot) {
-  const motion = [0, 0];
   const xDistance = prevKnot[0] - knot[0];
   const yDistance = prevKnot[1] - knot[1];
 
-  if (Math.abs(xDistance) >= 2) {
-    motion[0] = Math.sign(xDistance);
-    if (Math.abs(yDistance)) {
-      motion[1] = Math.sign(yDistance);
-    }
-  } else if (Math.abs(yDistance) >= 2) {
-    motion[1] = Math.sign(yDistance);
-    if (Math.abs(xDistance)) {
-      motion[0] = Math.sign(xDistance);
-    }
+  if (Math.abs(xDistance) >= 2 || Math.abs(yDistance) >= 2) {
+    return [Math.sign(xDistance), Math.sign(yDistance)];
   }
-  return motion;
+  return [0, 0];
 }
 
 function updateTail(head, tail, visited) {
   const [newHead, ...newTail] = tail;
+  const motion = getMotion(head, newHead);
 
-  const tMotion = getMotion(head, newHead);
-
-  if (tMotion[0] || tMotion[1]) {
-    newHead[0] += tMotion[0];
-    newHead[1] += tMotion[1];
+  if (motion[0] || motion[1]) {
+    newHead[0] += motion[0];
+    newHead[1] += motion[1];
 
     if (newTail.length) {
       return updateTail(newHead, newTail, visited);
@@ -58,7 +48,7 @@ function moveRope([direction, distance], [head, ...tail], visited) {
   updateTail(head, tail, visited);
 
   if (--distance) {
-    return moveRope([direction, distance], [head, ...tail], visited);
+    moveRope([direction, distance], [head, ...tail], visited);
   }
 }
 
