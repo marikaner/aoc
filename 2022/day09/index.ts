@@ -42,46 +42,46 @@ function updateTail(head, tail, visited) {
   }
 }
 
-function move(rope) {
-  const [head, ...tail] = rope;
+function moveHead(direction, head) {
+  if (direction === 'R') {
+    head[0] += 1;
+  } else if (direction === 'L') {
+    head[0] -= 1;
+  } else if (direction === 'U') {
+    head[1] += 1;
+  } else if (direction === 'D') {
+    head[1] -= 1;
+  }
+}
+
+function moveRope([direction, distance], [head, ...tail], visited) {
+  moveHead(direction, distance);
+  updateTail(head, tail, visited);
+
+  if (--distance) {
+    return moveRope([direction, distance], [head, ...tail], visited);
+  }
+}
+
+function moveAll(rope) {
   const visited = [rope[rope.length - 1].toString()];
 
-  motions.forEach(([direction, distance]) => {
-    if (direction === 'R') {
-      for (let i = 1; i <= distance; i++) {
-        head[0] += 1;
-        updateTail(head, tail, visited);
-      }
-    } else if (direction === 'L') {
-      for (let i = 1; i <= distance; i++) {
-        head[0] -= 1;
-        updateTail(head, tail, visited);
-      }
-    } else if (direction === 'U') {
-      for (let i = 1; i <= distance; i++) {
-        head[1] += 1;
-        updateTail(head, tail, visited);
-      }
-    } else if (direction === 'D') {
-      for (let i = 1; i <= distance; i++) {
-        head[1] -= 1;
-        updateTail(head, tail, visited);
-      }
-    }
-  });
+  motions.forEach(([direction, distance]) =>
+    moveRope([direction, distance], rope, visited)
+  );
 
   return new Set(visited).size;
 }
 
 function task1() {
-  return move([
+  return moveAll([
     [0, 0],
     [0, 0]
   ]);
 }
 
 function task2() {
-  return move([
+  return moveAll([
     [0, 0],
     [0, 0],
     [0, 0],
