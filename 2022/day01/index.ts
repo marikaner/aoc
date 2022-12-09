@@ -25,5 +25,5 @@ function task2() {
     .reduce((sum, calories) => sum + calories, 0);
 }
 
-// console.log(task1());
-// console.log(task2());
+console.log(task1());
+console.log(task2());
