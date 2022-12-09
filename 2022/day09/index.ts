@@ -44,18 +44,21 @@ function updateTail(head, tail, visited) {
 
 function moveHead(direction, head) {
   if (direction === 'R') {
-    head[0] += 1;
-  } else if (direction === 'L') {
-    head[0] -= 1;
-  } else if (direction === 'U') {
-    head[1] += 1;
-  } else if (direction === 'D') {
-    head[1] -= 1;
+    return (head[0] += 1);
+  }
+  if (direction === 'L') {
+    return (head[0] -= 1);
+  }
+  if (direction === 'U') {
+    return (head[1] += 1);
+  }
+  if (direction === 'D') {
+    return (head[1] -= 1);
   }
 }
 
 function moveRope([direction, distance], [head, ...tail], visited) {
-  moveHead(direction, distance);
+  moveHead(direction, head);
   updateTail(head, tail, visited);
 
   if (--distance) {
