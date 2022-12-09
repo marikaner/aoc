@@ -42,19 +42,15 @@ function updateTail(head, tail, visited) {
   }
 }
 
+const motionMapping = {
+  R: (head) => (head[0] += 1),
+  L: (head) => (head[0] -= 1),
+  U: (head) => (head[1] += 1),
+  D: (head) => (head[1] -= 1)
+};
+
 function moveHead(direction, head) {
-  if (direction === 'R') {
-    return (head[0] += 1);
-  }
-  if (direction === 'L') {
-    return (head[0] -= 1);
-  }
-  if (direction === 'U') {
-    return (head[1] += 1);
-  }
-  if (direction === 'D') {
-    return (head[1] -= 1);
-  }
+  motionMapping[direction](head);
 }
 
 function moveRope([direction, distance], [head, ...tail], visited) {
