@@ -46,7 +46,10 @@ function getClassNum(num: number): number {
   return num - lcm * factor;
 }
 
-function simulateRounds(rounds: number, releave: (num: number) => number) {
+function simulateRounds(
+  rounds: number,
+  releave: (num: number) => number = (num) => num
+) {
   const inspectedItems = monkeys.map(() => 0);
   for (let round = 0; round < rounds; round++) {
     monkeys.forEach(({ items, operation, divisibleBy, ifTrue, ifFalse }, i) => {
@@ -61,6 +64,7 @@ function simulateRounds(rounds: number, releave: (num: number) => number) {
     });
   }
 
+  console.log(inspectedItems);
   inspectedItems.sort((a, b) => a - b);
   return inspectedItems.pop() * inspectedItems.pop();
 }
@@ -70,8 +74,9 @@ function task1() {
 }
 
 function task2() {
-  return simulateRounds(10000, (num) => num);
+  return simulateRounds(10000);
 }
 
-console.log(task1());
+// tasks have side-effects
+// console.log(task1());
 console.log(task2());
