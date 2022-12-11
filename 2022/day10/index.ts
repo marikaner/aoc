@@ -5,9 +5,9 @@ const input = await readInput(import.meta.url);
 const operations = input.split('\n').map((line) => line.split(' '));
 
 function executeOperations(onCycleUpdate: (cycle: number, x: number) => void) {
-  let cycle = 0;
+  let cycle = 1;
   let x = 1;
-  onCycleUpdate(0, 1);
+  onCycleUpdate(1, 1);
 
   operations.forEach(([operation, value]) => {
     cycle++;
@@ -22,8 +22,8 @@ function executeOperations(onCycleUpdate: (cycle: number, x: number) => void) {
 
 function drawPixel(cycle: number, signal: number): string {
   const crtPos = cycle % 40;
-  const pixel = [signal - 1, signal, signal + 1].includes(crtPos) ? '#' : '.';
-  return crtPos ? pixel : `\n${pixel}`;
+  const pixel = [signal, signal + 1, signal + 2].includes(crtPos) ? '#' : '.';
+  return crtPos === 1 ? `\n${pixel}` : pixel;
 }
 
 function task1() {
