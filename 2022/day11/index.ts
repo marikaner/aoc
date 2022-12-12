@@ -41,11 +41,6 @@ function isDivisibleBy(num: number, by: number): boolean {
 
 const lcm = 2 * 3 * 5 * 7 * 11 * 13 * 17 * 19;
 
-function getClassNum(num: number): number {
-  const factor = Math.floor(num / lcm);
-  return num - lcm * factor;
-}
-
 function simulateRounds(
   rounds: number,
   releave: (num: number) => number = (num) => num
@@ -56,7 +51,7 @@ function simulateRounds(
       while (items.length) {
         const item = items.shift();
         inspectedItems[i]++;
-        const worry = getClassNum(releave(operation(item)));
+        const worry = releave(operation(item));
         const toMonkey =
           monkeys[isDivisibleBy(worry, divisibleBy) ? ifTrue : ifFalse];
         toMonkey.items.push(worry);
@@ -64,7 +59,6 @@ function simulateRounds(
     });
   }
 
-  console.log(inspectedItems);
   inspectedItems.sort((a, b) => a - b);
   return inspectedItems.pop() * inspectedItems.pop();
 }
@@ -74,7 +68,7 @@ function task1() {
 }
 
 function task2() {
-  return simulateRounds(10000);
+  return simulateRounds(10000, (num) => num % lcm);
 }
 
 // tasks have side-effects
