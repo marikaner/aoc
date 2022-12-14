@@ -20,11 +20,8 @@ paths.flat().forEach(([[startX, startY], [endX, endY]]) => {
     [startY, endY] = [endY, startY];
   }
   for (let x = startX; x <= endX; x++) {
-    if (!grid[x]) {
-      grid[x] = {};
-    }
     for (let y = startY; y <= endY; y++) {
-      grid[x][y] = true;
+      rest([x, y]);
     }
   }
 });
@@ -105,5 +102,5 @@ function task2() {
 }
 
 // side effects
-// console.log(task1());
-// console.log(task2());
+console.log(task1());
+console.log(task2());
