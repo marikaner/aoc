@@ -32,12 +32,10 @@ function add(snafu1: number[], snafu2: number[]): number[] {
   return a.reduce((snafu, digit, i) => {
     digit = digit + (snafu[i] ?? 0);
     if (digit > 2) {
-      snafu[i + 1] = snafu[i + 1] ? snafu[i + 1] : 0;
-      snafu[i + 1] += 1;
+      snafu[i + 1] = (snafu[i + 1] ?? 0) + 1;
       digit = digit - 5;
     } else if (digit < -2) {
-      snafu[i + 1] = snafu[i + 1] ? snafu[i + 1] : 0;
-      snafu[i + 1] -= 1;
+      snafu[i + 1] = (snafu[i + 1] ?? 0) - 1;
       digit = 5 + digit;
     }
 
