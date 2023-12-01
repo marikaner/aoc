@@ -1,21 +1,20 @@
 import { readInput } from '../read-input.js';
+import { sum } from '../util.js';
 
 const input = await readInput(import.meta.url);
 const calibrationDocument = input.split('\n');
 
 function part1() {
-  return calibrationDocument
-    .map((line) =>
-      line
-        .split('')
-        .map((char) => parseInt(char))
-        .filter((num) => !Number.isNaN(num))
-    )
-    .reduce((sum, digits) => {
-      const firstDigit = digits[0];
-      const lastDigit = digits[digits.length - 1];
-      return sum + 10 * firstDigit + lastDigit;
-    }, 0);
+  return sum(
+    calibrationDocument
+      .map((line) =>
+        line
+          .split('')
+          .map((char) => parseInt(char))
+          .filter((num) => !Number.isNaN(num))
+      )
+      .map((digits) => 10 * digits[0] + digits[digits.length - 1])
+  );
 }
 
 function part2() {
@@ -31,8 +30,8 @@ function part2() {
     'nine'
   ];
 
-  return calibrationDocument
-    .map((line) => {
+  return sum(
+    calibrationDocument.map((line) => {
       {
         const numDigits = line
           .split('')
@@ -66,7 +65,7 @@ function part2() {
         return 10 * firstDigit[1] + lastDigit[1];
       }
     })
-    .reduce((sum, num) => sum + num, 0);
+  );
 }
 
 console.log(part1());
