@@ -3,7 +3,7 @@ import { readInput } from '../read-input.js';
 const input = await readInput(import.meta.url);
 const calibrationDocument = input.split('\n');
 
-function task1() {
+function part1() {
   return calibrationDocument
     .map((line) =>
       line
@@ -18,7 +18,7 @@ function task1() {
     }, 0);
 }
 
-function task2() {
+function part2() {
   const wordNumbers = [
     'one',
     'two',
@@ -69,5 +69,5 @@ function task2() {
     .reduce((sum, num) => sum + num, 0);
 }
 
-console.log(task1());
-console.log(task2());
+console.log(part1());
+console.log(part2());
