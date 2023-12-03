@@ -1,23 +1,17 @@
 import { readInput } from '../read-input.js';
-import { sum } from '../util.js';
+import { sum, toArray } from '../util.js';
 
 const input = await readInput(import.meta.url);
 const lines = input.split('\n');
-const lineLength = lines[0].length;
 const numberPositions = lines.map((line) => getNumberPositions(line));
 
 function getNumberPositions(line: string) {
-  const numRegex = RegExp('[0-9]+', 'g');
-  let result;
-  const searchResult = [];
-  while ((result = numRegex.exec(line)) !== null) {
-    searchResult.push({
-      index: result.index,
-      num: parseInt(result[0]),
-      length: result[0].length
-    });
-  }
-  return searchResult;
+  const numberRegex = /\d+/g;
+  return toArray(line.matchAll(numberRegex)).map((result) => ({
+    index: result.index,
+    num: parseInt(result[0]),
+    length: result[0].length
+  }));
 }
 
 function getAdjacentChars(row: number, left: number, right: number) {
@@ -28,20 +22,15 @@ function getAdjacentChars(row: number, left: number, right: number) {
 
 function getGearPositions(line: string): number[] {
   const gearRegex = /\*/g;
-  let result;
-  const searchResult = [];
-  while ((result = gearRegex.exec(line)) !== null) {
-    searchResult.push(result.index);
-  }
-  return searchResult;
+  return toArray(line.matchAll(gearRegex)).map(({ index }) => index);
 }
 
 function getAdjacentNums(row: number, pos: number) {
   const numLines = [
-    ...(numberPositions[row - 1] || []),
-    ...numberPositions[row],
-    ...(numberPositions[row + 1] || [])
-  ];
+    numberPositions[row - 1] || [],
+    numberPositions[row],
+    numberPositions[row + 1] || []
+  ].flat();
   return numLines.filter(
     (numPos) => pos >= numPos.index - 1 && pos <= numPos.index + numPos.length
   );
@@ -49,13 +38,13 @@ function getAdjacentNums(row: number, pos: number) {
 
 function part1() {
   const symbolRegex = /[^\d\.]/;
-  const partNumPositions = numberPositions.flatMap((positions, row) => {
-    return positions.filter((pos) => {
-      const left = Math.max(0, pos.index - 1);
-      const right = Math.min(lineLength - 1, pos.index + pos.length);
-      return symbolRegex.test(getAdjacentChars(row, left, right));
-    });
-  });
+  const partNumPositions = numberPositions.flatMap((positions, row) =>
+    positions.filter((pos) =>
+      symbolRegex.test(
+        getAdjacentChars(row, pos.index - 1, pos.index + pos.length)
+      )
+    )
+  );
 
   return sum(partNumPositions, ({ num }) => num);
 }
