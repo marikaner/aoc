@@ -2,15 +2,12 @@ import { readInput } from '../read-input.js';
 import { sum } from '../util.js';
 
 const input = await readInput(import.meta.url);
-
-const numRegex = RegExp('[0-9]+', 'g');
-
-const gearRegex = /\*/g;
 const lines = input.split('\n');
 const lineLength = lines[0].length;
 const numberPositions = lines.map((line) => getNumberPositions(line));
 
 function getNumberPositions(line: string) {
+  const numRegex = RegExp('[0-9]+', 'g');
   let result;
   const searchResult = [];
   while ((result = numRegex.exec(line)) !== null) {
@@ -30,6 +27,7 @@ function getAdjacentChars(row: number, left: number, right: number) {
 }
 
 function getGearPositions(line: string): number[] {
+  const gearRegex = /\*/g;
   let result;
   const searchResult = [];
   while ((result = gearRegex.exec(line)) !== null) {
