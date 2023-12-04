@@ -1,5 +1,8 @@
-export function sum(arr: any[], access = (val: any) => val) {
-  return arr.reduce((sum, val) => sum + access(val), 0);
+export function sum<T>(
+  arr: T[],
+  access = (val: T, i?: number): number => val as number
+) {
+  return arr.reduce((sum, val, i) => sum + access(val, i), 0);
 }
 
 export function toArray<T>(it: IterableIterator<T>): T[] {
