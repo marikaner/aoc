@@ -5,6 +5,13 @@ export function sum<T>(
   return arr.reduce((sum, val, i) => sum + access(val, i), 0);
 }
 
+export function product<T>(
+  arr: T[],
+  access = (val: T, i?: number): number => val as number
+) {
+  return arr.reduce((sum, val, i) => sum * access(val, i), 1);
+}
+
 export function toArray<T>(it: IterableIterator<T>): T[] {
   const result = [];
   for (const item of it) {
