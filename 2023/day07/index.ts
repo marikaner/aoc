@@ -4,18 +4,21 @@ import { sum } from '../util.js';
 const input = await readInput(import.meta.url);
 
 const hands = input.split('\n').map((line) => {
-  const [hand, rawBid] = line.split(' ');
-  return { hand, bid: parseInt(rawBid) };
+  const [hand, bid] = line.split(' ');
+  return { hand: hand.split(''), bid: parseInt(bid) };
 });
 
 const typeScoring = {
-  fiveOfAKind: 6,
-  fourOfAKind: 5,
-  fullHouse: 4,
-  threeOfAKind: 3,
-  twoPair: 2,
-  onePair: 1,
-  highCard: 0
+  /* high card */
+  1: 0,
+  /* one pair, two pairs -> 1 + 1 = 2 */
+  2: 1,
+  /* three of a kind, full house -> 1 + 3 = 5 */
+  3: 3,
+  /* four of a kind */
+  4: 5,
+  /* five of a kind */
+  5: 6
 };
 
 const cardScoring = {
@@ -34,58 +37,33 @@ const cardScoring = {
   2: 2
 };
 
-function getRepeatedChar(hand: string, times: number): string | undefined {
-  const match = hand.match(new RegExp(`(.)(.*\\1.*){${times - 1}}`));
-  return match?.[1];
-}
+function getTypeScore(hand: string[], useJokers: boolean): number {
+  const charOccurrences = hand.reduce(
+    (chars, char) => ({ ...chars, [char]: (chars[char] || 0) + 1 }),
+    {} as Record<string, number>
+  );
 
-function getJokers(hand: string): number {
-  return hand.split('').filter((char) => char === 'J').length;
-}
-
-function getTypeScore(hand: string, includeJokers: boolean) {
   let jokers = 0;
-  if (includeJokers) {
-    jokers = getJokers(hand);
-    hand = hand.replaceAll('J', '');
+  if (useJokers) {
+    jokers = charOccurrences.J || 0;
+    charOccurrences.J = 0;
   }
-
-  let repeatedChar;
-  if (jokers === 5 || getRepeatedChar(hand, 5 - jokers)) {
-    return typeScoring.fiveOfAKind;
-  }
-  if (jokers === 4 || getRepeatedChar(hand, 4 - jokers)) {
-    return typeScoring.fourOfAKind;
-  }
-  if (jokers === 3 || (repeatedChar = getRepeatedChar(hand, 3 - jokers))) {
-    const reducedHand = hand.replaceAll(repeatedChar, '');
-    return getRepeatedChar(reducedHand, 2)
-      ? typeScoring.fullHouse
-      : typeScoring.threeOfAKind;
-  }
-  if (jokers === 2 || (repeatedChar = getRepeatedChar(hand, 2 - jokers))) {
-    const reducedHand = hand.replaceAll(repeatedChar, '');
-    return getRepeatedChar(reducedHand, 2)
-      ? typeScoring.twoPair
-      : typeScoring.onePair;
-  }
-  return typeScoring.highCard;
-}
-
-function compareTypes(handA: string, handB: string, includeJokers: boolean) {
-  return (
-    getTypeScore(handA, includeJokers) - getTypeScore(handB, includeJokers)
+  const [most, secondMost] = Object.values(charOccurrences).sort(
+    (a, b) => b - a
   );
+  return typeScoring[most + jokers] + (typeScoring[secondMost] || 0);
 }
 
-function compareHands(handA: string, handB: string, includeJokers = false) {
-  return (
-    compareTypes(handA, handB, includeJokers) || compareCards(handA, handB)
-  );
+function compareTypes(handA: string[], handB: string[], useJokers: boolean) {
+  return getTypeScore(handA, useJokers) - getTypeScore(handB, useJokers);
 }
 
-function compareCards(handA: string, handB: string) {
-  const i = handA.split('').findIndex((char, i) => char !== handB[i]);
+function compareHands(handA: string[], handB: string[], useJokers = false) {
+  return compareTypes(handA, handB, useJokers) || compareCards(handA, handB);
+}
+
+function compareCards(handA: string[], handB: string[]) {
+  const i = handA.findIndex((char, i) => char !== handB[i]);
   return cardScoring[handA[i]] - cardScoring[handB[i]];
 }
 
@@ -99,6 +77,7 @@ function part1() {
 
 function part2() {
   cardScoring.J = 1;
+
   const rankedHands = hands
     .sort((a, b) => compareHands(a.hand, b.hand, true))
     .map(({ bid }, i) => bid * (i + 1));
