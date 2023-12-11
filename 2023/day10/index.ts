@@ -43,9 +43,7 @@ interface Pos {
 
 type Dir = 'W' | 'N' | 'E' | 'S';
 
-interface Pipe {
-  row: number;
-  col: number;
+interface Pipe extends Pos {
   dir: Dir;
 }
 
