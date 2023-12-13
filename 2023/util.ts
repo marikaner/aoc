@@ -12,6 +12,25 @@ export function product<T>(
   return arr.reduce((sum, val, i) => sum * access(val, i), 1);
 }
 
+export function unique<T>(arr: T[]) {
+  return Array.from(new Set(arr));
+}
+
+export function zip<T>(arr1: T[], arr2: T[]) {
+  let result = [];
+  let i;
+  for (i = 0; i < arr1.length; i++) {
+    if (arr1[i]) {
+      result.push(arr1[i]);
+    }
+    if (arr2[i]) {
+      result.push(arr2[i]);
+    }
+  }
+  result.push(...arr2.slice(i));
+  return result;
+}
+
 export function toArray<T>(it: IterableIterator<T>): T[] {
   const result = [];
   for (const item of it) {
