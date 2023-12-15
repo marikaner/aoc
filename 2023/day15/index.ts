@@ -22,64 +22,9 @@ function parseStep(str: string) {
   };
 }
 
-interface Lense {
-  next: Lense | undefined;
-  prev: Lense | undefined;
-  focalLength: number;
-}
-
-interface Box {
-  first: Lense | undefined;
-  last: Lense | undefined;
-  lenses: Record<string, Lense>;
-}
-
-function replaceLense(box: Box, label: string, focalLength: number) {
-  box.lenses[label].focalLength = focalLength;
-}
-
-function addLense(box: Box, label: string, focalLength: number) {
-  const lense = {
-    focalLength,
-    prev: box.last,
-    next: undefined
-  };
-  if (box.last) {
-    box.last.next = lense;
-    // box was empty before
-  } else {
-    box.first = lense;
-  }
-  box.last = lense;
-  box.lenses[label] = lense;
-}
-
-function removeLense(box: Box, label: string) {
-  const lense = box.lenses[label];
-  if (lense) {
-    if (lense.prev) {
-      lense.prev.next = lense.next;
-      // lense was first
-    } else {
-      box.first = lense.next;
-    }
-    if (lense.next) {
-      lense.next.prev = lense.prev;
-      // lense was last
-    } else {
-      box.last = lense.prev;
-    }
-    delete box.lenses[label];
-  }
-}
-
-function getOrCreateBox(boxes: Box[], i: number) {
+function getBox(boxes: Record<string, number>[], i: number) {
   if (!boxes[i]) {
-    boxes[i] = {
-      last: null,
-      first: null,
-      lenses: {}
-    };
+    boxes[i] = {};
   }
   return boxes[i];
 }
@@ -88,25 +33,25 @@ function fillBoxes(boxes = []) {
   seq
     .map((str) => parseStep(str))
     .forEach(({ label, operation, focalLength }) => {
-      const box = getOrCreateBox(boxes, hash(label));
+      const box = getBox(boxes, hash(label));
       if (operation === '=') {
-        return box.lenses[label]
-          ? replaceLense(box, label, focalLength)
-          : addLense(box, label, focalLength);
+        box[label] = focalLength;
+      } else {
+        delete box[label];
       }
-      return removeLense(box, label);
     });
 
   return boxes;
 }
 
-function getFocussingPower(boxes: Box[]) {
-  return boxes.reduce((sum, { first: curr }, boxI) => {
-    for (let i = 1; curr; i++, curr = curr.next) {
-      sum += (boxI + 1) * i * curr.focalLength;
-    }
-    return sum;
-  }, 0);
+function getFocussingPower(boxes: Record<string, number>[]) {
+  return sum(
+    boxes.flatMap((box, boxI) =>
+      Object.values(box).map(
+        (focalLength, i) => (boxI + 1) * (i + 1) * focalLength
+      )
+    )
+  );
 }
 
 function part1() {
