@@ -31,10 +31,39 @@ export function zip<T>(arr1: T[], arr2: T[]) {
   return result;
 }
 
+export function rotate<T>(matrix: T[][]) {
+  const rotatedMatrix = [];
+  for (let x = 0; x < matrix[0].length; x++) {
+    rotatedMatrix.push(matrix.map((row) => row[x]).reverse());
+  }
+  return rotatedMatrix;
+}
+
 export function toArray<T>(it: IterableIterator<T>): T[] {
   const result = [];
   for (const item of it) {
     result.push(item);
   }
   return result;
+}
+
+export function memoize<ArgsT extends any[], ReturnT extends any>(
+  fn: (...args: ArgsT) => ReturnT,
+  getCacheKey: (...args: ArgsT) => string = (...args) =>
+    args.map((arg) => arg.toString()).join(':')
+) {
+  const cache = {};
+
+  return function (...args: ArgsT): ReturnT {
+    const key = getCacheKey(...args);
+    if (key in cache) {
+      // console.log('FROM CACHE');
+      return cache[key];
+    }
+    // console.log('TO CACHE');
+    // console.log(cache);
+
+    cache[key] = fn(...args);
+    return cache[key];
+  };
 }
