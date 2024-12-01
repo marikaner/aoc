@@ -9,5 +9,7 @@ export function getDirName(fileUrl: string): string {
 }
 
 export async function readInput(fileUrl: string): Promise<string> {
-  return await readFile(resolve(getDirName(fileUrl), 'input'), 'utf-8');
+  return (
+    await readFile(resolve(getDirName(fileUrl), 'input'), 'utf-8')
+  ).trimEnd();
 }
