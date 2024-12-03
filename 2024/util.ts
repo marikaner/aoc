@@ -16,6 +16,10 @@ export function unique<T>(arr: T[]) {
   return Array.from(new Set(arr));
 }
 
+export function sign(val: number): 1 | -1 {
+  return val < 0 ? -1 : 1;
+}
+
 export function zip<T>(arr1: T[], arr2: T[]) {
   let result = [];
   let i;
