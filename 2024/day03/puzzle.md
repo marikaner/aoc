@@ -23,8 +23,6 @@ Scan the corrupted memory for uncorrupted `mul` instructions. *What do you get i
 
 Your puzzle answer was `178794710`.
 
-The first half of this puzzle is complete! It provides one gold star: \*
-
 \--- Part Two ---
 ----------
 
@@ -49,8 +47,12 @@ This time, the sum of the results is `*48*` (`2*4 + 8*5`).
 
 Handle the new instructions; *what do you get if you add up all of the results of just the enabled multiplications?*
 
-Answer:
+Your puzzle answer was `76729637`.
 
-Although it hasn't changed, you can still [get your puzzle input](3/input).
+Both parts of this puzzle are complete! They provide two gold stars: \*\*
 
-You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=I%27ve+completed+Part+One+of+%22Mull+It+Over%22+%2D+Day+3+%2D+Advent+of+Code+2024+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2024%2Fday%2F3) [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+Part+One+of+%22Mull+It+Over%22+%2D+Day+3+%2D+Advent+of+Code+2024&url=https%3A%2F%2Fadventofcode%2Ecom%2F2024%2Fday%2F3&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
+At this point, you should [return to your Advent calendar](/2024) and try another puzzle.
+
+If you still want to see it, you can [get your puzzle input](3/input).
+
+You can also [Shareon [Bluesky](https://bsky.app/intent/compose?text=I%27ve+completed+%22Mull+It+Over%22+%2D+Day+3+%2D+Advent+of+Code+2024+%23AdventOfCode+https%3A%2F%2Fadventofcode%2Ecom%2F2024%2Fday%2F3) [Twitter](https://twitter.com/intent/tweet?text=I%27ve+completed+%22Mull+It+Over%22+%2D+Day+3+%2D+Advent+of+Code+2024&url=https%3A%2F%2Fadventofcode%2Ecom%2F2024%2Fday%2F3&related=ericwastl&hashtags=AdventOfCode) [Mastodon](javascript:void(0);)] this puzzle.
