@@ -82,27 +82,6 @@ function canCalibrate(
     includeConcatenation
   );
   return permutations.some((ops) => calculate(nums, ops) === val);
-  // for (let i = 0; i <= operators.length; i++) {
-  //   if (
-  //     getPermutations(operators).some((ops) => calculate(numbers, ops) === val)
-  //   ) {
-  //     return true;
-  //   }
-  //   const opsCopy = [...operators];
-  //   for (let k = i; k < operators.length; k++) {
-  //     if (k < opsCopy.length) {
-  //       opsCopy[k] = '||';
-  //     }
-  //     if (
-  //       getPermutations(opsCopy).some((ops) => calculate(numbers, ops) === val)
-  //     ) {
-  //       return true;
-  //     }
-  //   }
-  //   if (i < operators.length) {
-  //     operators[i] = '*';
-  //   }
-  // }
 }
 
 function part1() {
@@ -115,5 +94,5 @@ function part2() {
   );
 }
 
-// console.log(part1());
+console.log(part1());
 console.log(part2());
