@@ -22,7 +22,7 @@ function getNeighbors(pos: Pos) {
   ].filter((p) => p);
 }
 
-function walk(pos: Pos) {
+function walk(pos: Pos): Pos[] {
   if (pos.height === 9) {
     return [pos];
   }
