@@ -54,18 +54,15 @@ export function toArray<T>(it: IterableIterator<T>): T[] {
 export function memoize<ArgsT extends any[], ReturnT extends any>(
   fn: (...args: ArgsT) => ReturnT,
   getCacheKey: (...args: ArgsT) => string = (...args) =>
-    args.map((arg) => arg.toString()).join(':')
+    args.map((arg) => JSON.stringify(arg)).join(':')
 ) {
   const cache = {};
 
   return function (...args: ArgsT): ReturnT {
     const key = getCacheKey(...args);
     if (key in cache) {
-      // console.log('FROM CACHE');
       return cache[key];
     }
-    // console.log('TO CACHE');
-    // console.log(cache);
 
     cache[key] = fn(...args);
     return cache[key];
